@@ -1,0 +1,16 @@
+doctype html
+html
+    head
+        title pageTitle
+    body
+        h1 #{services.length} found
+        p リグを選択してください
+        form(action="./host")
+            select(name="host")
+                each service in services
+                    - var json = JSON.stringify({addrs: service.addresses,port: service.port, validaddr: service.validaddr})
+                    option(value=json) #{service.validaddr}[#{service.mac}]
+            input(type="submit")
+        p IPv4アドレスに続く[]内の数値はMACアドレスです。
+        p MACアドレスはEthernetアダプタ固有のアドレスでIPアドレスのように変動しません。
+        p リグを識別する際はMACアドレスを使うと良いでしょう。

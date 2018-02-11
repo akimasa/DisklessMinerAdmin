@@ -1,0 +1,42 @@
+doctype html
+html
+    head
+        title= addr
+        link(rel="stylesheet", href="/xterm/xterm.css")
+        style(type="text/css").
+            #addr, #port {
+                display: none
+            }
+        script(src="/xterm/xterm.js")
+        script(src="/socket.io/socket.io.js")
+        script(src="/js/hostadm.js")
+    body
+        a(href="/discover") TOP
+        p#addr= addr
+        p#port= port
+        button.command(command="\x03") ^C
+        #eth
+            h1 ETH mining
+            button.command(command="curl -L https://github.com/ethereum-mining/ethminer/releases/download/v0.14.0.dev1/ethminer-0.14.0.dev1-Linux.tar.gz > ethminer.tar.gz; tar xvf ethminer.tar.gz\n") ethminerをダウンロードして展開
+            form(onsubmit="starteth();return false;")
+                div
+                    span ETH wallet
+                    input#ethwallet(type="text",value="0xYOUR_WALLET")
+                div
+                    span mining pool
+                    input#ethpool(type="text",value="eth-jp1.nanopool.org:9999")
+                div
+                    span worker name
+                    input#ethworker(type="text",value="defaultworker")
+                div
+                    span email
+                    input#ethemail(type="text",value="youraddress@example.com")
+                input(type="submit",value="マイニング開始")
+        h1 gpu調整
+        button(onclick="getgpu()") gpu情報を取得
+        #gpu
+        form(onsubmit="setpower();return false;")
+            input#powerlimit(type="text")
+            input(type="submit",value="変更")
+        #terminal
+        

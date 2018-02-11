@@ -1,0 +1,14 @@
+doctype html
+html
+    head
+        title pageTitle
+    body
+        p IPアドレスを選択してください。
+        p 通常は最初に選ばれているので問題ないはずです。
+        p 次のページで接続できない場合は変更してください。
+        form(action="./hostadm")
+            select(name="addr")
+                each addr in addrs
+                    option(value=addr,selected=(addr === validaddr)) #{addr}
+            input(type="hidden",name="port",value=port)
+            input(type="submit")
