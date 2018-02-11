@@ -4,13 +4,15 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build.win32": "electron-packager --platform=win32 --arch=ia32 ./"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "electron": "^1.8.2"
+    "electron": "^1.8.2",
+    "electron-packager": "^11.0.0"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
