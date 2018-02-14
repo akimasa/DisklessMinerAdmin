@@ -42,7 +42,8 @@ function starteth() {
         wallet = document.getElementById("ethwallet").value,
         worker = document.getElementById("ethworker").value,
         email = document.getElementById("ethemail").value
-    var command = `./bin/ethminer --farm-recheck 2000 -U -S ${pool} -O ${wallet}.${worker}/${email}\n`
+    var command = `nohup ./bin/ethminer --farm-recheck 2000 -U -S ${pool} -O ${wallet}.${worker}/${email} 1> >(nohup logger) 2> >(nohup logger) &`
+    +`journalctl -f\n`
     socket.emit('input', command)
 }
 function getgpu() {
