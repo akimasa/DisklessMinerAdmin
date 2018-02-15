@@ -5,11 +5,11 @@ html
     body
         h1 #{services.length} found
         p リグを選択してください
-        form(action="./host")
-            select(name="host")
+        form(action="./hostadm")
+            select(name="addr")
                 each service in services
                     - var json = JSON.stringify({addrs: service.addresses,port: service.port, validaddr: service.validaddr})
-                    option(value=json) #{service.validaddr}[#{service.mac}]
+                    option(value=service.validaddr) #{service.validaddr}[#{service.mac}]
             input(type="submit")
         p IPv4アドレスに続く[]内の数値はMACアドレスです。
         p MACアドレスはEthernetアダプタ固有のアドレスでIPアドレスのように変動しません。
