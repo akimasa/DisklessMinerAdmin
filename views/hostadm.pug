@@ -4,7 +4,7 @@ html
         title= addr
         link(rel="stylesheet", href="/xterm/xterm.css")
         style(type="text/css").
-            #addr, #port {
+            #addr, #port, #gputweak {
                 display: none
             }
         script(src="/xterm/xterm.js")
@@ -32,11 +32,18 @@ html
                     span email
                     input#ethemail(type="text",value="youraddress@example.com")
                 input(type="submit",value="マイニング開始")
+                p マイニングを開始すると、ログが流れるのでコマンド入力ができません
+                p 周波数やPower Limitを変更したい場合は^Cでプロンプトに戻してください
         h1 gpu調整
         button(onclick="getgpu()") gpu情報を取得
-        #gpu
-        form(onsubmit="setpower();return false;")
-            input#powerlimit(type="text")
-            input(type="submit",value="変更")
+        #gputweak
+            #gpu
+            form(onsubmit="setpower();return false;")
+                input#powerlimit(type="text")
+                input(type="submit",value="Power Limit変更")
+            button(onclick="initmemoffset()") GPUメモリ周波数変更準備
+            form(onsubmit="setmemoffset();return false;")
+                input#memoffset(type="text")
+                input(type="submit",value="メモリ周波数変更")
         #terminal
         

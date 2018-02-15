@@ -62,16 +62,24 @@ function getgpu() {
                 var csv = lines[i].split(/,/)
                 var option = document.createElement("option")
                 option.innerText = `${csv[0]}: ${csv[1]} Power: ${csv[3]}/${csv[2]}`
-                option.value = csv[0]
+                option.value = JSON.stringify({index: csv[0], uuid:csv[1]})
                 select.appendChild(option)
             })()
         }
         document.getElementById("gpu").innerHTML = ""
         document.getElementById("gpu").appendChild(select)
+        document.getElementById("gputweak").style.display = "block"
         
     })
 }
 function setpower(){
-    var index = document.getElementById("gpuindex").value
+    var index = JSON.parse(document.getElementById("gpuindex").value).index
     socket.emit('input', `nvidia-smi -i ${index} -pm 1; nvidia-smi -i ${index} -pl ${document.getElementById("powerlimit").value}\n`)
+}
+function initmemoffset(){
+    socket.emit('input', "nvidia-xconfig --enable-all-gpus; nvidia-xconfig --cool-bits=8; nohup startx -- :0 1>/dev/null 2>/dev/null&\n")
+}
+function setmemoffset(){
+    var uuid = JSON.parse(document.getElementById("gpuindex").value).uuid
+    socket.emit('input', `nvidia-settings -c :0 -a '[gpu:${uuid}]/GPUMemoryTransferRateOffset[3]=${document.getElementById("memoffset").value}'\n`)
 }
