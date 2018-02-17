@@ -42,8 +42,8 @@ function starteth() {
         wallet = document.getElementById("ethwallet").value,
         worker = document.getElementById("ethworker").value,
         email = document.getElementById("ethemail").value
-    var command = `nohup ./bin/ethminer --farm-recheck 2000 -U -S ${pool} -O ${wallet}.${worker}/${email} 1> >(nohup logger) 2> >(nohup logger) &`
-    +`journalctl -f\n`
+    var command = `nohup systemd-cat -t gpuminer ./bin/ethminer --farm-recheck 2000 -U -S ${pool} -O ${wallet}.${worker}/${email} &`
+    +`journalctl -af -o cat -t gpuminer\n`
     socket.emit('input', command)
 }
 function getgpu() {
