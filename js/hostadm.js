@@ -39,7 +39,7 @@ function send(e) {
 }
 function starteth() {
     var ethopts = document.getElementById("ethopts").value,
-        command = `nohup systemd-cat -t gpuminer ./bin/ethminer ${ethopts} &`
+        command = `nohup systemd-cat -t gpuminer ./bin/ethminer ${ethopts} &\n`
     socket.emit('input', command)
 }
 function setxmr() {
