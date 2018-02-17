@@ -34,10 +34,10 @@ html
                     textarea#xmrpoolconf(cols=100,rows=10) {"pool_address" : "POOL:PORT", "wallet_address" : "ADDRESS.WORKER/EMAIL", "pool_password" : "", "use_nicehash" : false, "use_tls" : false, "tls_fingerprint" : "", "pool_weight" : 1 },
                 input(type="submit",value="設定送信")
             div
-                button.command(command="./bin/xmr-stak\n") テスト実行
+                button.command(command="sysctl -w vm.nr_hugepages=128; ./bin/xmr-stak\n") テスト実行
                 button.command(command="\x03") テスト終了
             div
-            button.command(command="nohup systemd-cat -t xmr-stak ./bin/xmr-stak &\n") マイニング開始
+            button.command(command="sysctl -w vm.nr_hugepages=128; nohup systemd-cat -t xmr-stak ./bin/xmr-stak &\n") マイニング開始
         h1 gpu調整
         button(onclick="getgpu()") gpu情報を取得
         #gputweak
