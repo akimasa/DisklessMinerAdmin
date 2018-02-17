@@ -20,20 +20,24 @@ html
             button.command(command="curl -L https://github.com/ethereum-mining/ethminer/releases/download/v0.14.0.dev1/ethminer-0.14.0.dev1-Linux.tar.gz > ethminer.tar.gz; tar xvf ethminer.tar.gz\n") ethminerをダウンロードして展開
             form(onsubmit="starteth();return false;")
                 div
-                    span ETH wallet
-                    input#ethwallet(type="text",value="0xYOUR_WALLET")
-                div
-                    span mining pool
-                    input#ethpool(type="text",value="eth-jp1.nanopool.org:9999")
-                div
-                    span worker name
-                    input#ethworker(type="text",value="defaultworker")
-                div
-                    span email
-                    input#ethemail(type="text",value="youraddress@example.com")
+                    span ./bin/ethminer
+                    input#ethopts(type="text",size=100,value="--farm-recheck 2000 -U -S POOL:PORT -O 0xWALLET.WORKER/EMAIL")
                 input(type="submit",value="マイニング開始")
-                p マイニングを開始すると、ログが流れるのでコマンド入力ができません
-                p 周波数やPower Limitを変更したい場合は^Cでプロンプトに戻してください
+            button.command(command="journalctl -af -o cat -t gpuminer\n") ログ確認（^Cで終了）
+        #xmr
+            h1 XMR mining
+            button.command(command="curl -L https://github.com/akimasa/DisklessMinerAdmin/releases/download/v0.0.4/xmrstak.tar.xz | tar xJ\n") xmrstakを展開
+            form(onsubmit="setxmr();return false;")
+                div
+                    input#xmrcurrency(value="monero")
+                div
+                    textarea#xmrpoolconf(cols=100,rows=10) {"pool_address" : "POOL:PORT", "wallet_address" : "ADDRESS.WORKER/EMAIL", "pool_password" : "", "use_nicehash" : false, "use_tls" : false, "tls_fingerprint" : "", "pool_weight" : 1 },
+                input(type="submit",value="設定送信")
+            div
+                button.command(command="./bin/xmr-stak\n") テスト実行
+                button.command(command="\x03") テスト終了
+            div
+            button.command(command="nohup systemd-cat -t xmr-stak ./bin/xmr-stak &\n") マイニング開始
         h1 gpu調整
         button(onclick="getgpu()") gpu情報を取得
         #gputweak
