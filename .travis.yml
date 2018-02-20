@@ -1,0 +1,31 @@
+services:
+  - docker
+sudo: required
+cache:
+  directories:
+  - node_modules
+  - $HOME/.cache/electron
+  - $HOME/.cache/electron-builder
+
+script:
+  - |
+    docker run --rm \
+      --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_') \
+      -v ${PWD}:/project \
+      -v ~/.cache/electron:/root/.cache/electron \
+      -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+      electronuserland/builder:wine \
+      /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn run build.win32"
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
+deploy:
+  provider: releases
+  api_key:
+    secure: "YJ+IBJVDjCJ364PFhySnDn4yYg7OX+/lPf9c5v8bM1/0PbNkIaMMmu/uM9ggxVBCAenupizkfWtSnxtEWYitFh1RqFdV+mel0tPYJljf4kJQa3wEi9vziSO0IQkn60r9alTUn8dMKhDJpaDYMYm0UWC9Ya9tpnclLlrWOGRqazYD0tjSNP8wk6/NNK2Qf58Mf7qImkwhg66Efx6vsIE3fDSferj/Exp0tpPjSvWo6kvI6AUORsM2b9wuQ9d59HFVHKIlD1uncx8vnTgufDDVDae5tCdKvTmoOGYVeHgUCiRZ8Vtj+DESuB39MNbmj7pb6T03UMVgD6BWnKT8KBkR5DOamm+ZARSsN+djgfZ5cigaVzlXWQ0nCfmFDKFk1gR0tlvqIsEyacXl60Ky8YtaWtdTylgExUmD7eMseGWD2WnDVt3EccX0OfElIjxC0l7OU65HK2x5N4XoeV0AcM+d5vlYNBGePSlm9xatXgV/6FOUrPTjo+1wKvGRcWuupQmBYfvcItY8wrZW0czJc/AMqgybiZzNW0bdwYD9O01Ji+C8gpshfYJMI06U4G229twnMlkpxdnDlg17MU5R9artnVm72EygYAdImd4LQ+Hr2weGiTKTxIoh8vdMV3jbWVrFftf9ATx6sLotkp9arDQE6jGTU5OSfMvyuaoyWLnoWQY="
+  file:
+    - "dist/disklessmineradmin-1.0.0-ia32-win.7z"
+  skip_cleanup: true
+  on:
+    branch: master
+  prerelease: true
+  body: 自動生成された最新版です。
