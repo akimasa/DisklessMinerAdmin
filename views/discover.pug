@@ -4,7 +4,11 @@ html
         title pageTitle
     body
         h1 #{services.length} found
-        p リグを選択してください
+        button(onclick="location.reload()") 更新
+        button(onclick="location.href=\"discover?refresh=1\"") 再検出
+        p 更新を押すと、検出されていなかったリグが出てくるかもしれません。
+        p 再検出を押すと、今まで検出されたリグの情報を消して、もう一度検出しなおします。
+        h1 リグを選択してください
         form(action="./hostadm")
             select(name="addr")
                 each service in services

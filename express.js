@@ -48,15 +48,20 @@ const jsonParser = bodyParser.json()
 app.use('/js', express.static(__dirname + '/js'))
 app.use('/xterm', express.static(__dirname + '/node_modules/xterm/dist'))
 var services = []
+var discoverTimer, discoverBrowser = null;
 app.get('/discover', (req, res) => {
     if (services.length == 0 || req.query.refresh == 1) {
+        if (discoverBrowser !== null) {
+            clearTimeout(discoverTimer)
+            discoverBrowser.stop()
+        }
         services = []
-        var browser = bonjour.find({ type: "ssh" }, (service) => {
+        discoverBrowser = bonjour.find({ type: "ssh" }, (service) => {
             for (var i = 0; i < service.addresses.length; i++) {
                 var addr = service.addresses[i]
                 if (ip.isV4Format(addr)) {
                     arp.getMAC(addr, (err, mac) => {
-                        if(!err){
+                        if (!err) {
                             service.mac = mac
                             service.validaddr = addr
                         }
@@ -65,12 +70,16 @@ app.get('/discover', (req, res) => {
             }
             services.push(service)
         })
+        discoverTimer = setTimeout(() => {
+            discoverBrowser.stop()
+            discoverBrowser = null
+        }, 10000)
         setTimeout(() => {
-            browser.stop()
             // res.contentType = "application/json"
             // res.send(JSON.stringify(services))
             res.render('discover', { services })
-        }, 3000)
+        }, 1000)
+
     } else {
         res.render('discover', { services })
     }
