@@ -27,5 +27,6 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+    tags: false
   prerelease: true
   body: 自動生成された最新版です。
