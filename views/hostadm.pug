@@ -15,6 +15,11 @@ html
         p#addr= addr
         p#port= port
         button.command(command="\x03") ^C
+        #excavator
+            h1 install excavator
+            form(onsubmit="excavator();return false;")
+                input#excavatorurl(type="text",size=100,value="https://github.com/nicehash/excavator/releases/download/v1.4.4a/excavator_1.4.4a_amd64.deb")
+                input(type="submit")
         #eth
             h1 ETH mining
             button.command(command="curl -L https://github.com/ethereum-mining/ethminer/releases/download/v0.14.0.dev1/ethminer-0.14.0.dev1-Linux.tar.gz > ethminer.tar.gz; tar xvf ethminer.tar.gz\n") ethminerをダウンロードして展開

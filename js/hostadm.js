@@ -266,3 +266,6 @@ function setmemoffset(){
     var uuid = JSON.parse(document.getElementById("gpuindex").value).uuid
     socket.emit('input', `nvidia-settings -c :0 -a '[gpu:${uuid}]/GPUMemoryTransferRateOffset[3]=${document.getElementById("memoffset").value}'\n`)
 }
+function excavator() {
+    socket.emit('input', `mkdir /tmp/excavator/; curl -L ${document.getElementById("excavatorurl").value} > /tmp/excavator/excavator.deb; cd /tmp/excavator/; ar xf excavator.deb; tar xf data.tar.xz; cp opt/excavator/bin/excavator /root/; cd; rm -r /tmp/excavator\n`);
+}
