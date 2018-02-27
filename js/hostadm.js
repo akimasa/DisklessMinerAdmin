@@ -269,3 +269,12 @@ function setmemoffset(){
 function excavator() {
     socket.emit('input', `mkdir /tmp/excavator/; curl -L ${document.getElementById("excavatorurl").value} > /tmp/excavator/excavator.deb; cd /tmp/excavator/; ar xf excavator.deb; tar xf data.tar.xz; cp opt/excavator/bin/excavator /root/; cd; rm -r /tmp/excavator\n`);
 }
+function installCheck() {
+    var cmd = "if [ -e ccminer -a -e excavator -a -e bin/ethminer ] ; then echo ready to mine; else echo something missing; fi"
+    cmd += "; if [ -e ccminer ] ; then echo ccminer ok; else echo ccminer missing; fi"
+    cmd += "; if [ -e excavator ] ; then echo excavator ok; else echo excavator missing; fi"
+    cmd += "; if [ -e bin/ethminer ] ; then echo ethminer ok; else echo ethminer missing; fi"
+    execCmd(cmd).then((res) => {
+        alert(res)
+    })
+}
