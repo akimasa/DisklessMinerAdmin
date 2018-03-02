@@ -260,16 +260,18 @@ function getgpu() {
 }
 function setpower(){
     var index = JSON.parse(document.getElementById("gpuindex").value).index
-    socket.emit('input', `nvidia-smi -i ${index} -pm 1; nvidia-smi -i ${index} -pl ${document.getElementById("powerlimit").value}\n`)
+    socket.emit('input', `${INITMEMOFFSET}nvidia-smi -i ${index} -pm 1; nvidia-smi -i ${index} -pl ${document.getElementById("powerlimit").value}\n`)
     socket.emit('setsetting',`gpu.${JSON.parse(document.getElementById("gpuindex").value).uuid}.power`, document.getElementById("powerlimit").value)
-}
-function initmemoffset(){
-    socket.emit('input', INITMEMOFFSET)
 }
 function setmemoffset(){
     var uuid = JSON.parse(document.getElementById("gpuindex").value).uuid
-    socket.emit('input', `nvidia-settings -c :0 -a '[gpu:${uuid}]/GPUMemoryTransferRateOffset[3]=${document.getElementById("memoffset").value}'\n`)
+    socket.emit('input', `${INITMEMOFFSET}nvidia-settings -c :0 -a '[gpu:${uuid}]/GPUMemoryTransferRateOffset[3]=${document.getElementById("memoffset").value}'\n`)
     socket.emit('setsetting',`gpu.${JSON.parse(document.getElementById("gpuindex").value).uuid}.memoffset`, document.getElementById("memoffset").value)
+}
+function setcoreoffset(){
+    var uuid = JSON.parse(document.getElementById("gpuindex").value).uuid
+    socket.emit('input', `${INITMEMOFFSET}nvidia-settings -c :0 -a '[gpu:${uuid}]/GPUGraphicsClockOffset[3]=${document.getElementById("coreoffset").value}'\n`)
+    socket.emit('setsetting',`gpu.${JSON.parse(document.getElementById("gpuindex").value).uuid}.coreoffset`, document.getElementById("coreoffset").value)
 }
 function excavator() {
     socket.emit('input', `mkdir /tmp/excavator/; curl -L ${document.getElementById("excavatorurl").value} > /tmp/excavator/excavator.deb; cd /tmp/excavator/; ar xf excavator.deb; tar xf data.tar.xz; cp opt/excavator/bin/excavator /root/; cd; rm -r /tmp/excavator\n`);
@@ -310,7 +312,10 @@ function previewSetCmd() {
         if(gpu.setting.memoffset){
             cmd += `nvidia-settings -c :0 -a '[gpu:${gpu.uuid}]/GPUMemoryTransferRateOffset[3]=${gpu.setting.memoffset}'\n`
         }
-        if(gpu.setting.memoffset){
+        if(gpu.setting.coreoffset){
+            cmd += `nvidia-settings -c :0 -a '[gpu:${gpu.uuid}]/GPUGraphicsClockOffsett[3]=${gpu.setting.coreoffset}'\n`
+        }
+        if(gpu.setting.power){
             cmd += `nvidia-smi -i ${gpu.index} -pm 1; nvidia-smi -i ${gpu.index} -pl ${gpu.setting.power}\n`
         }
     }
