@@ -7,6 +7,7 @@ const sshClient = require('ssh2').Client;
 const bodyParser = require('body-parser')
 const ip = require('ip')
 const arp = require('node-arp')
+var settings
 
 
 io.on('connection', (sock) => {
@@ -34,6 +35,13 @@ io.on('connection', (sock) => {
             username: 'root',
             privateKey: require('fs').readFileSync(__dirname + '/sshkey')
         })
+    })
+    sock.on("setsetting", (name, data) => {
+        settings.set(name, data)
+    })
+    sock.on("getsetting", (event, data) => {
+        var d = settings.get(data)
+        sock.emit(event, event, d)
     })
     sock.on("disconnect", () => {
         sshc.end(); //???
@@ -119,6 +127,7 @@ app.post('/exec', jsonParser, (req, res) => {
 app.get('/', (req, res) => {
     res.render('index')
 });
-exports.init = () => {
+exports.init = (s) => {
     server.listen(3000)
+    settings = s
 }

@@ -67,6 +67,9 @@ html
             form(onsubmit="setmemoffset();return false;")
                 input#memoffset(type="text")
                 input(type="submit",value="メモリ周波数変更")
+            h2 保存された設定を一括適用する
+                textarea#previewcmd(cols=150,rows=20)
+                button(onclick="setall()") 一括適用
         h1 ターミナル
         #terminal
         

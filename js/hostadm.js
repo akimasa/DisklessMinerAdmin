@@ -1,5 +1,6 @@
 var socket = io();
-var addr, port
+var addr, port, gpus
+const INITMEMOFFSET = "nvidia-xconfig --enable-all-gpus; nvidia-xconfig --cool-bits=8; nohup startx -- :0 1>/dev/null 2>/dev/null&\n"
 window.onload = function () {
     addr = document.getElementById("addr").textContent
     port = document.getElementById("port").textContent
@@ -237,6 +238,7 @@ function getgpu() {
         var lines = res.split(/\n/)
         var select = document.createElement("select")
         select.setAttribute("id","gpuindex")
+        gpus = []
         for (var i = 0; i<lines.length; i++){
             if(lines[i] === "") {
                 continue
@@ -247,24 +249,27 @@ function getgpu() {
                 option.innerText = `${csv[0]}: ${csv[1]} Power: ${csv[3]}/${csv[2]}`
                 option.value = JSON.stringify({index: csv[0], uuid:csv[1]})
                 select.appendChild(option)
+                gpus.push({index:csv[0],uuid:csv[1]})
             })()
         }
         document.getElementById("gpu").innerHTML = ""
         document.getElementById("gpu").appendChild(select)
         document.getElementById("gputweak").style.display = "block"
-        
+        getGPUSettings()
     })
 }
 function setpower(){
     var index = JSON.parse(document.getElementById("gpuindex").value).index
     socket.emit('input', `nvidia-smi -i ${index} -pm 1; nvidia-smi -i ${index} -pl ${document.getElementById("powerlimit").value}\n`)
+    socket.emit('setsetting',`gpu.${JSON.parse(document.getElementById("gpuindex").value).uuid}.power`, document.getElementById("powerlimit").value)
 }
 function initmemoffset(){
-    socket.emit('input', "nvidia-xconfig --enable-all-gpus; nvidia-xconfig --cool-bits=8; nohup startx -- :0 1>/dev/null 2>/dev/null&\n")
+    socket.emit('input', INITMEMOFFSET)
 }
 function setmemoffset(){
     var uuid = JSON.parse(document.getElementById("gpuindex").value).uuid
     socket.emit('input', `nvidia-settings -c :0 -a '[gpu:${uuid}]/GPUMemoryTransferRateOffset[3]=${document.getElementById("memoffset").value}'\n`)
+    socket.emit('setsetting',`gpu.${JSON.parse(document.getElementById("gpuindex").value).uuid}.memoffset`, document.getElementById("memoffset").value)
 }
 function excavator() {
     socket.emit('input', `mkdir /tmp/excavator/; curl -L ${document.getElementById("excavatorurl").value} > /tmp/excavator/excavator.deb; cd /tmp/excavator/; ar xf excavator.deb; tar xf data.tar.xz; cp opt/excavator/bin/excavator /root/; cd; rm -r /tmp/excavator\n`);
@@ -282,4 +287,36 @@ function startswitcher() {
     var ethopts = document.getElementById("wallet").value,
         command = `[ -e switcher ] || curl -#L https://github.com/akimasa/DisklessMinerAdmin/releases/download/v0.0.4/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${ethopts} &\n`
     socket.emit('input', command)
+}
+socket.on('getgpu', (name, data)=> {
+    if (name == "getgpu"){
+        for (var i = 0; i < gpus.length; i++){
+            if(gpus[i].uuid) {
+                var uuid = gpus[i].uuid
+                var gpusetting = data[uuid]
+                gpus[i].setting = gpusetting
+            }
+        }
+    }
+    previewSetCmd()
+})
+function getGPUSettings() {
+    socket.emit("getsetting","getgpu", "gpu")
+}
+function previewSetCmd() {
+    var cmd = INITMEMOFFSET
+    for (var i = 0; i < gpus.length; i++){
+        var gpu = gpus[i]
+        if(gpu.setting.memoffset){
+            cmd += `nvidia-settings -c :0 -a '[gpu:${gpu.uuid}]/GPUMemoryTransferRateOffset[3]=${gpu.setting.memoffset}'\n`
+        }
+        if(gpu.setting.memoffset){
+            cmd += `nvidia-smi -i ${gpu.index} -pm 1; nvidia-smi -i ${gpu.index} -pl ${gpu.setting.power}\n`
+        }
+    }
+    document.getElementById("previewcmd").value = cmd
+    console.log(cmd)
+}
+function setall() {
+    socket.emit('input', document.getElementById("previewcmd").value)
 }
