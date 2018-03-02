@@ -21,7 +21,7 @@ before_cache:
 before_deploy:
   - git config --local user.name "Akimasa Tateba"
   - git config --local user.email "akimasa@gmail.com"
-  - git tag "v0.0.5-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+  - git tag "v0.0.6-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy:
   provider: releases
   api_key:
