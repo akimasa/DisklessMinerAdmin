@@ -320,7 +320,6 @@ function previewSetCmd() {
         }
     }
     document.getElementById("previewcmd").value = cmd
-    console.log(cmd)
 }
 function setall() {
     socket.emit('input', document.getElementById("previewcmd").value)
