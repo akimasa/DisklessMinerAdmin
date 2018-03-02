@@ -287,7 +287,7 @@ function installCheck() {
 }
 function startswitcher() {
     var ethopts = document.getElementById("wallet").value,
-        command = `[ -e switcher ] || curl -#L https://github.com/akimasa/DisklessMinerAdmin/releases/download/v0.0.4/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${ethopts} &\n`
+        command = `[ -e switcher ] || curl -#L https://github.com/akimasa/ArchDisklessMiner/releases/download/v0.1.5.2/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${ethopts} &\n`
     socket.emit('input', command)
 }
 socket.on('getgpu', (name, data)=> {
