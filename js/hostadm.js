@@ -1,6 +1,6 @@
 var socket = io();
 var addr, port, gpus
-const INITMEMOFFSET = "nvidia-xconfig --enable-all-gpus; nvidia-xconfig --cool-bits=8; nohup startx -- :0 1>/dev/null 2>/dev/null&\n"
+const INITMEMOFFSET = "if ! pgrep Xorg; then nvidia-xconfig --enable-all-gpus; nvidia-xconfig --cool-bits=8; nohup startx -- :0 1>/dev/null 2>/dev/null&fi\n"
 window.onload = function () {
     addr = document.getElementById("addr").textContent
     port = document.getElementById("port").textContent
