@@ -286,8 +286,9 @@ function installCheck() {
     })
 }
 function startswitcher() {
-    var ethopts = document.getElementById("wallet").value,
-        command = `[ -e switcher ] || curl -#L https://github.com/akimasa/ArchDisklessMiner/releases/download/v0.1.5.2/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${ethopts} &\n`
+    var wallet = document.getElementById("wallet").value,
+        loc = document.getElementById("location").value,
+        command = `[ -e switcher ] || curl -#L https://github.com/akimasa/ArchDisklessMiner/releases/download/v0.1.5.2/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${wallet} --location ${loc} &\n`
     socket.emit('input', command)
 }
 socket.on('getgpu', (name, data)=> {

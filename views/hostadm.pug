@@ -31,6 +31,8 @@ html
                 div
                     span BTC wallet
                     input#wallet(type="text",value="")
+                    span location
+                    input#location(type="text",value="jp")
                 input(type="submit",value="マイニング開始")
             button.command(command="journalctl -af -o cat -t switcher\n") ログ確認（^Cで終了）
         #eth
