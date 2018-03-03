@@ -308,13 +308,14 @@ function getGPUSettings() {
 }
 function previewSetCmd() {
     var cmd = INITMEMOFFSET
+    cmd += `sleep 5\n`
     for (var i = 0; i < gpus.length; i++){
         var gpu = gpus[i]
         if(gpu.setting.memoffset){
             cmd += `nvidia-settings -c :0 -a '[gpu:${gpu.uuid}]/GPUMemoryTransferRateOffset[3]=${gpu.setting.memoffset}'\n`
         }
         if(gpu.setting.coreoffset){
-            cmd += `nvidia-settings -c :0 -a '[gpu:${gpu.uuid}]/GPUGraphicsClockOffsett[3]=${gpu.setting.coreoffset}'\n`
+            cmd += `nvidia-settings -c :0 -a '[gpu:${gpu.uuid}]/GPUGraphicsClockOffset[3]=${gpu.setting.coreoffset}'\n`
         }
         if(gpu.setting.power){
             cmd += `nvidia-smi -i ${gpu.index} -pm 1; nvidia-smi -i ${gpu.index} -pl ${gpu.setting.power}\n`
