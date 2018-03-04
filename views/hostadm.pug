@@ -15,6 +15,9 @@ html
         p#addr= addr
         p#port= port
         button.command(command="\x03") ^C
+        h1 ログアウト
+        p 設定を終了する場合は念のため、ログアウトを押してください。GPU調整を行った後は特にログアウトを忘れずに押すことをおすすめします。押さないとハッシュレートが低下する場合があります
+        button.command(command="logout\n") ログアウト
         #switcherprepare
             h1 switcherの利用前準備
             p ボタンを押したら一番下のターミナル画面を見て、実行が終わるのを待ってください
