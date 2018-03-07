@@ -78,7 +78,7 @@ html
                 textarea#previewcmd(cols=150,rows=20)
                 button(onclick="setall()") 一括適用
         h2 起動コマンド
-        p 何度も実行する起動コマンドを保存することができます。
+        p 何度も実行する起動コマンドを保存することができます。今まで入力したコマンドをコピーしたい場合は、下のターミナルからコピーしてください。黒い部分をクリックして、上矢印を押すと履歴が出てきます。コピーはウィンドウ上部のEditメニューからコピーを選んでください。ターミナルからコピーしたコマンドは途中で改行されているので注意してください。途中の改行は取り除かないと正しく実行されません。
         textarea#startcmd(cols=150,rows=20)
         button(onclick="savestartcmd()") 保存
         button(onclick="startcmd()") 実行
