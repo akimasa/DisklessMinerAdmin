@@ -291,7 +291,7 @@ function startswitcher() {
         loc = document.getElementById("location").value,
         command = `[ -e switcher ] || curl -#L https://github.com/akimasa/ArchDisklessMiner/releases/download/v0.1.5.2/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${wallet} --location ${loc} &\n`
     socket.emit('input', command)
-    socket.emit('setsetting',`global.btcwallet`, wallet)
+    socket.emit('setsetting',`global.wallet`, wallet)
 }
 socket.on('getgpu', (name, data)=> {
     if (name == "getgpu"){
