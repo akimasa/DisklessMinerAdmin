@@ -77,6 +77,11 @@ html
             h2 保存された設定を一括適用する
                 textarea#previewcmd(cols=150,rows=20)
                 button(onclick="setall()") 一括適用
+        h2 起動コマンド
+        p 何度も実行する起動コマンドを保存することができます。
+        textarea#startcmd(cols=150,rows=20)
+        button(onclick="savestartcmd()") 保存
+        button(onclick="startcmd()") 実行
         h1 ターミナル
         #terminal
         

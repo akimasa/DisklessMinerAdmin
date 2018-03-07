@@ -23,6 +23,7 @@ window.onload = function () {
             socket.emit("input", e.target.getAttribute('command'));
         }, true)
     }
+    socket.emit("getsetting","getstartcmd", "global")
 }
 function execCmd(cmd) {
     return new Promise((resolve) => {
@@ -325,4 +326,14 @@ function previewSetCmd() {
 }
 function setall() {
     socket.emit('input', document.getElementById("previewcmd").value)
+}
+socket.on('getstartcmd', (name, data)=> {
+    console.log(data)
+    document.getElementById("startcmd").value = data.startcmd
+})
+function savestartcmd() {
+    socket.emit('setsetting',`global.startcmd`, document.getElementById("startcmd").value)
+}
+function startcmd() {
+    socket.emit('input', document.getElementById("startcmd").value + "\n")
 }
