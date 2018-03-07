@@ -23,7 +23,7 @@ window.onload = function () {
             socket.emit("input", e.target.getAttribute('command'));
         }, true)
     }
-    socket.emit("getsetting","getstartcmd", "global")
+    socket.emit("getsetting","getglobal", "global")
 }
 function execCmd(cmd) {
     return new Promise((resolve) => {
@@ -291,6 +291,7 @@ function startswitcher() {
         loc = document.getElementById("location").value,
         command = `[ -e switcher ] || curl -#L https://github.com/akimasa/ArchDisklessMiner/releases/download/v0.1.5.2/switcher.xz | unxz > switcher ;chmod +x switcher; nohup systemd-cat -t switcher ./switcher --wallet ${wallet} --location ${loc} &\n`
     socket.emit('input', command)
+    socket.emit('setsetting',`global.btcwallet`, wallet)
 }
 socket.on('getgpu', (name, data)=> {
     if (name == "getgpu"){
@@ -327,9 +328,14 @@ function previewSetCmd() {
 function setall() {
     socket.emit('input', document.getElementById("previewcmd").value)
 }
-socket.on('getstartcmd', (name, data)=> {
+socket.on('getglobal', (name, data)=> {
     console.log(data)
-    document.getElementById("startcmd").value = data.startcmd
+    if(data.startcmd){
+        document.getElementById("startcmd").value = data.startcmd
+    }
+    if(data.wallet){
+        document.getElementById("wallet").value = data.wallet
+    }
 })
 function savestartcmd() {
     socket.emit('setsetting',`global.startcmd`, document.getElementById("startcmd").value)
